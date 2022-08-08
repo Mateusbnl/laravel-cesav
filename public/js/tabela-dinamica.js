@@ -1,34 +1,37 @@
-function adicionaContratoNaTabela(contratos, unidade_escolhida, produto_escolhido) {
-    var tabela = document.querySelector("#corpo");
-    var display_unidade = document.querySelector("#display_unidade");
-    var display_produto = document.querySelector("#display_produto");
-
-    tabela.innerHTML = '';
-
+function adicionaContratoNaTabela(contratos, unidade_escolhida, produto_escolhido, data_escolhida) {
     if (unidade_escolhida == "todas_unidades") {
         unidade_escolhida = 1;
     }
 
-    if (unidade_escolhida == "todos_produtos") {
+    if (produto_escolhido == "todos_produtos") {
         produto_escolhido = 1;
     }
 
+    var tabela = document.querySelector("#corpo");
+    var display_unidade = document.querySelector("#display_unidade");
+    var display_produto = document.querySelector("#display_produto");
+    var display_data = document.querySelector("#display_data");
+
+    tabela.innerHTML = '';
+
     const codigos_unidades = [...new Set(contratos.map(contrato => contrato.co_unidade))];
     const codigos_produtos = [...new Set(contratos.map(contrato => contrato.nu_produto))];
+    const datas_validas = [...new Set(contratos.map(contrato => contrato.data_arquivo))];
 
     codigos_unidades.forEach(function (contrato) {
-        var opcao = montaOption(contrato.co_unidade, contrato.co_unidade);
+        var opcao = montaOption(contrato, contrato);
         display_unidade.appendChild(opcao);
     });
 
     codigos_produtos.forEach(function (contrato) {
-        var opcao = montaOption(contrato.nu_produto, nu_produto);
+        var opcao = montaOption(contrato, contrato);
         display_produto.appendChild(opcao);
     });
 
-
-    contratos = contratos.filter(contrato => contrato.co_unidade = unidade_escolhida)
-    contratos = contratos.filter(contrato => contrato.nu_produto = produto_escolhido)
+    datas_validas.forEach(function (contrato) {
+        var opcao = montaOption(contrato, contrato);
+        display_data.appendChild(opcao);
+    });
 
     contratos.forEach(function (contrato) {
         var contratoTr = montaTr(contrato);
@@ -51,8 +54,10 @@ function montaTr(contrato) {
     coluna.textContent = contrato.data_arquivo;
 
     contratoTr.appendChild(coluna);
+    contratoTr.appendChild(montaTd(contrato.nu_produto, "info-produto"));
     contratoTr.appendChild(montaTd(contrato.qtd, "info-qtd"));
     contratoTr.appendChild(montaTd(contrato.valor_base, "info-valor"));
+    contratoTr.appendChild(montaTd(contrato.co_unidade, "info-unidade"));
 
     return contratoTr;
 }

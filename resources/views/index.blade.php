@@ -65,6 +65,10 @@
                     <label for="display_produto">Produto</label>
                     <select class="form-select" name="produto" id="display_produto">
                     </select>
+
+                    <label for="display_data">Data</label>
+                    <select class="form-select" name="display_data" id="display_data">
+                    </select>
                     <br>
                 </div>
                 <div class="card-body">
@@ -72,8 +76,10 @@
                         <thead>
                             <tr>
                                 <th scope="col">Data</th>
+                                <th scope="col">Cod. Produto</th>
                                 <th scope="col">Quantidade de Contratos</th>
                                 <th scope="col">Valor Base</th>
+                                <th scope="col">Unidade</th>
                             </tr>
                         </thead>
                         <tbody id="corpo">
@@ -131,7 +137,7 @@
                 },
                 success: function(response) {
                     ctr = response;
-                    adicionaContratoNaTabela(response, co_unidade, nu_produto);
+                    adicionaContratoNaTabela(response, co_unidade, nu_produto, data_inicial);
                 },
                 error: function(error) {
                     alert('error; ' + eval(error));
