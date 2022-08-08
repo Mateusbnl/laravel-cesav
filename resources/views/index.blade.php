@@ -6,86 +6,138 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>PSI CESAV</title>
 
     <!-- Fonts -->
-    <link href="{{asset('css/app.css')}}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading"><b>Charts</b></div>
-                <div class="panel-body">
-                    <canvas id="canvas" height="280" width="600"></canvas>
+    <h1 style="color:green; text-align:center;">
+        CESAV - Dashboard
+    </h1>
+    <div class="container">
+        <div class="col d-flex justify-content-left">
 
-                    <div>
-                        <form method="get" action="/pesquisar">
-                            @csrf
-                            <select name="unidade" id="unidade">
+            <div class="card">
+                <div class="card-body">
+                    <form id="pesquisar">
+                        @csrf
+                        <div class="form-group">
+                            <label for="data_inicial">Data Inicial</label>
+                            <input type="date" class="form-control" id="data_inicial" name="data_inicial">
+                        </div>
+                        <div class="form-group">
+                            <label for="data_final">Data Final</label>
+                            <input type="date" class="form-control" id="data_final" name="data_final">
+                        </div>
+                        <div class="form-group">
+                            <label for="unidade">Unidade</label>
+                            <br>
+                            <select class="form-select" name="unidade" id="unidade">
+                                <option value="todas_unidades">TODAS</option>
                                 @foreach($unidades as $unidade)
-                                <option value="{{$unidade->co_unidade}}">{{ $unidade->no_unidade }}</option>
+                                <option value="{{$unidade->co_unidade}}">{{$unidade->no_unidade}}</option>
                                 @endforeach
                             </select>
-
-                            <select name="produto" id="produto">
+                        </div>
+                        <div class="form-group">
+                            <label for="produto">Produto</label>
+                            <br>
+                            <select class="form-select" name="produto" id="produto">
+                                <option value="todos_produtos">TODOS</option>
                                 @foreach($produtos as $produto)
-                                <option value="{{ $produto->nu_produto }}">{{ $produto->no_produto }}</option>
+                                <option value="{{$produto->nu_produto}}">{{$produto->no_produto}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <button type="submit" id="btnPesquisar" class="btn btn-primary">Pesquisar</button>
+                    </form>
+                </div>
+            </div>
 
-                            <input name="data_inicial" id="data_inicial" type="date">
-                            <input name="data_final" id="data_final" type="date">
-                            <button class="btn btn-primary mt-2 mb-2">Pesquisar</button>
-                        </form>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <label for="data">Selecione a data</label>
+                    <br>
+                    <select class="form-select" name="data" id="data">
+                        <option value="data1">01/07/2022</option>
+                        <option value="data2">02/07/2022</option>
+                        <option value="data3">05/07/2022</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <table class="table" id="tabela_por_data">
+                        <thead>
+                            <tr>
+                                <th scope="col">Data</th>
+                                <th scope="col">Quantidade</th>
+                                <th scope="col">Valor Base</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">Posição da Dívida: R$80.000,00</div>
+            </div>
+        </div>
+
+        <div class="col d-flex justify-content-bottom">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Última posição: {{ $data_posicao }}</h5>
+                    <p class="card-text">Quantidade de Contratos: {{$qtd_contratos}}</p>
+                    <p class="card-footer">Posição Dívida Consolidada: {{$valor_posicao}}</p>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/js/bootstrap-select.min.js" charset="utf-8"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.js" charset="utf-8"></script>
 
-    <script>
-        var url = "{{url('stock/chart')}}";
-        var Years = new Array();
-        var Labels = new Array();
-        var Prices = new Array();
-        $(document).ready(function() {
-            $.get(url, function(response) {
-                response.forEach(function(data) {
-                    Years.push(data.stockYear);
-                    Labels.push(data.stockName);
-                    Prices.push(data.stockPrice);
-                });
-                var ctx = document.getElementById("canvas").getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Years,
-                        datasets: [{
-                            label: 'Infosys Price',
-                            data: Prices,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
-                });
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{{URL::asset('js/tabela-dinamica.js')}}"></script>
+
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var contratos;
+        var url = "{{url('/pesquisar')}}";
+        $('#pesquisar').on('submit', function(e) {
+            e.preventDefault();
+
+            data_inicial = $('#data_inicial').val();
+            data_final = $('#data_final').val();
+            co_unidade = $('#unidade option:selected').val();
+            nu_produto = $('#produto option:selected').val();
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                headers: {
+                    'X-CSRF-TOKEN': "{{csrf_token()}}",
+                },
+                contentType: 'application/x-www-form-urlencoded',
+                data: {
+                    "data_inicial": data_inicial,
+                    "data_final": data_final,
+                    "unidade": co_unidade,
+                    "produto": nu_produto
+                },
+                success: function(response) {
+                    adicionaContratoNaTabela(response);
+                },
+                error: function(error) {
+                    alert('error; ' + eval(error));
+                }
             });
         });
-    </script>
-</body>
+    });
+</script>
 
 </html>

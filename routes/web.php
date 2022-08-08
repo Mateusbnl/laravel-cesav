@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'App\Http\Controllers\ContratosController@index');
-Route::get('/pesquisar', 'App\Http\Controllers\ContratosController@show');
+Route::get('/pesquisar', 'App\Http\Controllers\ContratosController@sinteticoPorUnidade');
