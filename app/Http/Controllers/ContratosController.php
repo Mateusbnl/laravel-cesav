@@ -79,15 +79,17 @@ class ContratosController extends Controller
 
     public function sinteticoPorUnidade(Request $request)
     {
-
         $data_inicial = $request->data_inicial;
         $data_final = $request->data_final;
 
         $unidade = $request->unidade;
         $produto = $request->produto;
 
-        $contratos = DB::select('exec SinteticoPorUnidade "' . $data_inicial . '","' . $data_final . '",' . $unidade . ',' . $produto . ',@soma=0, @qtd=0');
-
+        if ($unidade == "todas_unidades" && $produto = "todos_produtos") {
+            $contratos = DB::select('exec SinteticoTodos "' . $data_inicial . '","' . $data_final . '"');
+        } else {
+            $contratos = DB::select('exec SinteticoPorUnidade "' . $data_inicial . '","' . $data_final . '",' . $unidade . ',' . $produto . ',@soma=0, @qtd=0');
+        }
         return response()->json($contratos);
     }
 

@@ -17,7 +17,7 @@
         CESAV - Dashboard
     </h1>
     <div class="container">
-        <div class="col d-flex justify-content-left">
+        <div class="col d-flex justify-content-space-between">
 
             <div class="card">
                 <div class="card-body">
@@ -58,20 +58,21 @@
 
             <div class="card">
                 <div class="card-header">
-                    <label for="data">Selecione a data</label>
-                    <br>
-                    <select class="form-select" name="data" id="data">
-                        <option value="data1">01/07/2022</option>
-                        <option value="data2">02/07/2022</option>
-                        <option value="data3">05/07/2022</option>
+                    <label for="produto">Unidade</label>
+                    <select class="form-select" name="display_unidade" id="display_unidade">
                     </select>
+
+                    <label for="display_produto">Produto</label>
+                    <select class="form-select" name="produto" id="display_produto">
+                    </select>
+                    <br>
                 </div>
                 <div class="card-body">
                     <table class="table" id="tabela_por_data">
                         <thead>
                             <tr>
                                 <th scope="col">Data</th>
-                                <th scope="col">Quantidade</th>
+                                <th scope="col">Quantidade de Contratos</th>
                                 <th scope="col">Valor Base</th>
                             </tr>
                         </thead>
@@ -79,7 +80,6 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer">Posição da Dívida: R$80.000,00</div>
             </div>
         </div>
 
@@ -130,7 +130,8 @@
                     "produto": nu_produto
                 },
                 success: function(response) {
-                    adicionaContratoNaTabela(response);
+                    ctr = response;
+                    adicionaContratoNaTabela(response, co_unidade, nu_produto);
                 },
                 error: function(error) {
                     alert('error; ' + eval(error));
