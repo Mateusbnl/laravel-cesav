@@ -77,18 +77,21 @@ class ContratosController extends Controller
         return response()->json($contratos);
     }
 
-    public function sinteticoPorUnidade(Request $request)
+    public function sinteticoTotal(Request $request)
     {
         $data_inicial = $request->data_inicial;
         $data_final = $request->data_final;
+        $unidade = strval($request->unidade);
+        $produto = strval($request->produto);
 
-        $unidade = $request->unidade;
-        $produto = $request->produto;
-
-        if ($unidade == "todas_unidades" && $produto = "todos_produtos") {
-            $contratos = DB::select('exec SinteticoTodos "' . $data_inicial . '","' . $data_final . '"');
+        if (strcmp("todas_unidades", $unidade) == 0 && strcmp("todos_produtos", $produto) == 0) {
+            $contratos = DB::select('exec SinteticoTodos "' . $data_inicial . '","' . $data_final . '", @co_unidade = NULL, @nu_produto = NULL');
+        } else if (strcmp("todas_unidades", $unidade) == 0) {
+            $contratos = DB::select('exec SinteticoTodos "' . $data_inicial . '","' . $data_final . '", @co_unidade = NULL, @nu_produto = "' . $produto . '"');
+        } else if (strcmp("todos_produtos", $produto) == 0) {
+            $contratos = DB::select('exec SinteticoTodos "' . $data_inicial . '","' . $data_final . '", @co_unidade = ' . $unidade . ', @nu_produto = NULL');
         } else {
-            $contratos = DB::select('exec SinteticoPorUnidade "' . $data_inicial . '","' . $data_final . '",' . $unidade . ',' . $produto . ',@soma=0, @qtd=0');
+            $contratos = DB::select('exec SinteticoTodos "' . $data_inicial . '","' . $data_final . '", @co_unidade = ' . $unidade . ', @nu_produto = ' . $produto . '');
         }
         return response()->json($contratos);
     }
