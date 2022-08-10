@@ -22,21 +22,19 @@ class ContratosController extends Controller
     {
         $unidades = Unidade::all();
         $produtos = Produto::all();
-        $contratos = DB::select('exec ObtemUltimaPosicao');
-
-        $ultima_data = $contratos[0]->data_arquivo;
 
 
-        $valor_posicao_por_data = DB::select('exec ValorTotalPorData "' . $ultima_data . '", @soma = 0 ');
-        $qtd_contratos_por_data = DB::select('exec QtdContratosPorData "' . $ultima_data . '", @qtd = 0 ');
+        $ultima_posicao = DB::select('exec obtemUltimaPosicao ');
 
         //formatação de dados para view
-        $ultima_data = date('d/m/Y', strtotime($contratos[0]->data_arquivo));
+        $ultima_data = date('d/m/Y', strtotime($ultima_posicao[0]->data_arquivo));
+        $valor_posicao = $ultima_posicao[0]->valor_base;
+        $qtd_contratos = $ultima_posicao[0]->qtd;
 
         $fmt = numfmt_create('pt_BR', NumberFormatter::CURRENCY);
-        $valor_posicao_por_data = numfmt_format_currency($fmt, $valor_posicao_por_data[0]->total, "BRL");
+        $valor_posicao = numfmt_format_currency($fmt, $valor_posicao, "BRL");
 
-        return view('index', ['unidades' => $unidades, 'produtos' => $produtos, 'contratos' => $contratos, 'data_posicao' =>  $ultima_data, 'valor_posicao' => $valor_posicao_por_data, 'qtd_contratos' => $qtd_contratos_por_data[0]->qtd]);
+        return view('index', ['unidades' => $unidades, 'produtos' => $produtos, 'data_posicao' =>  $ultima_data, 'valor_posicao' => $valor_posicao, 'qtd_contratos' => $qtd_contratos]);
     }
 
     /**
