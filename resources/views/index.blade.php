@@ -22,97 +22,89 @@
         </div>
     </div>
 
-    <div class="container-fluid">
-        <div class="row mx-md-n5 align-items-start">
-            <div class="col px-md-5" style="height: 10.0%;">
-                <div class="card p-3 border bg-light">
-                    <div class="card-body">
-                        <form id="pesquisar">
-                            @csrf
-                            <div class="form-group">
-                                <label for="data_inicial">Data Inicial</label>
-                                <input type="date" class="form-control" id="data_inicial" name="data_inicial">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card p-3 border bg-light" style="width: 51rem; height: 52rem;">
+                        <h5 class="card-title">Valor Total por Data</h4>
+                            <div class="card-body" id="corpo-canvas">
+                                <canvas class="canvas" id="myChart"></canvas>
                             </div>
-                            <div class="form-group">
-                                <label for="data_final">Data Final</label>
-                                <input type="date" class="form-control" id="data_final" name="data_final">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-3 border bg-light" style="width: 51rem; height: 52rem;">
+                        <h5 class="card-title">Valor Total por Produto</h4>
+                            <div class="card-body" id="corpo-pie">
+                                <canvas class="canvas" id="myPieChartProdutos"></canvas>
                             </div>
-                            <div class="form-group">
-                                <label for="unidade">Unidade</label>
-                                <br>
-                                <select class="form-select" name="unidade" id="unidade">
-                                    <option value="todas_unidades">TODAS</option>
-                                    @foreach($unidades as $unidade)
-                                    <option value="{{$unidade->co_unidade}}">{{$unidade->no_unidade}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="produto">Produto</label>
-                                <br>
-                                <select class="form-select" name="produto" id="produto">
-                                    <option value="todos_produtos">TODOS</option>
-                                    @foreach($produtos as $produto)
-                                    <option value="{{$produto->nu_produto}}">{{$produto->no_produto}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <button type="submit" id="btnPesquisar" class="btn btn-primary">Pesquisar</button>
-                        </form>
                     </div>
                 </div>
             </div>
-
-            <div class="col px-md-5">
-                <div class="p-3 border bg-light" id="filtro-tabela">
-                    <div class="card-body">
-                        <table class="table" id="tabela_por_data">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Data</th>
-                                    <th scope="col">Cod. Produto</th>
-                                    <th scope="col">Quantidade de Contratos</th>
-                                    <th scope="col">Valor Base</th>
-                                    <th scope="col">Unidade</th>
-                                </tr>
-                            </thead>
-                            <tbody id="corpo">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col px-md-5">
-                <div class="card p-3 border bg-light">
-                    <div class="card-body" id="corpo-canvas">
-                        <canvas class="canvas" id="myChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col px-md-5">
-                <div class="card p-3 border bg-light">
-                    <div class="card-body" id="corpo-pie">
-                        <canvas class="canvas" id="myPieChartProdutos"></canvas>
-                    </div>
+            <div class="card" id="filtro-tabela">
+                <div class="card-body">
+                    <table class="table" id="tabela_por_data">
+                        <thead>
+                            <tr>
+                                <th scope="col">Data</th>
+                                <th scope="col">Cod. Produto</th>
+                                <th scope="col">Quantidade de Contratos</th>
+                                <th scope="col">Valor Base</th>
+                                <th scope="col">Unidade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="container-fluid">
-        <div class="row mx-md-n5 align-items-start">
-            <div class="col-4 px-md-5">
-                <div class="card p-3 border bg-light">
-                    <h5 class="card-title">Última posição: {{ $data_posicao }}</h5>
-                    <p class="card-text">Quantidade de Contratos: {{$qtd_contratos}}</p>
-                    <p class="card-footer">Posição Dívida Consolidada: {{$valor_posicao}}</p>
+        <div class="col-md-4">
+            <div class="card p-3 border bg-light">
+                <div class="card-body">
+                    <form id="pesquisar">
+                        @csrf
+                        <div class="form-group">
+                            <label for="data_inicial">Data Inicial</label>
+                            <input type="date" class="form-control" id="data_inicial" name="data_inicial">
+                        </div>
+                        <div class="form-group">
+                            <label for="data_final">Data Final</label>
+                            <input type="date" class="form-control" id="data_final" name="data_final">
+                        </div>
+                        <div class="form-group">
+                            <label for="unidade">Unidade</label>
+                            <br>
+                            <select class="form-select" name="unidade" id="unidade">
+                                <option value="todas_unidades">TODAS</option>
+                                @foreach($unidades as $unidade)
+                                <option value="{{$unidade->co_unidade}}">{{$unidade->no_unidade}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="produto">Produto</label>
+                            <br>
+                            <select class="form-select" name="produto" id="produto">
+                                <option value="todos_produtos">TODOS</option>
+                                @foreach($produtos as $produto)
+                                <option value="{{$produto->nu_produto}}">{{$produto->no_produto}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="submit" id="btnPesquisar" class="btn btn-primary">Pesquisar</button>
+                    </form>
                 </div>
+            </div>
+            <div class="card p-3 border bg-light">
+                <h5 class="card-title">Última posição: {{ $data_posicao }}</h5>
+                <p class="card-text">Quantidade de Contratos: {{$qtd_contratos}}</p>
+                <p class="card-footer">Posição Dívida Consolidada: {{$valor_posicao}}</p>
             </div>
         </div>
     </div>
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -253,7 +245,7 @@
                         dado.forEach(valor => {
                             valor_base_produto += Number(valor.valor_base.replace(/[^0-9.-]+/g, ""));
                         });
-                        pieData.push(valor_base_produto);
+                        pieData.push(valor_base_produto.toString());
                     });
 
                     pieLabel = [...new Set(contratos.map(contrato => contrato.nu_produto))];
@@ -291,11 +283,7 @@
                 labels: pieLabel,
                 datasets: [{
                     label: 'Valor Total por Produto',
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
+                    backgroundColor: getRandomColor(pieLabel.length),
                     hoverOffset: 4,
                     data: pieData
                 }]
@@ -311,7 +299,6 @@
             /*Instancia objetos de graficos*/
 
             var ctx = document.getElementById('myPieChartProdutos');
-            console.log(ctx);
 
             myPieChartProdutos = new Chart(
                 ctx,
@@ -333,6 +320,19 @@
             arr.forEach(obj => map.get(obj[prop]).push(obj));
             return Array.from(map.values());
         };
+
+        function getRandomColor(qtdProdutos) { //generates random colours and puts them in string
+            var colors = [];
+            for (var i = 0; i <= qtdProdutos; i++) {
+                var letters = '0123456789ABCDEF'.split('');
+                var color = '#';
+                for (var x = 0; x < 6; x++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                colors.push(color);
+            }
+            return colors;
+        }
 
         /**Reinicia o Canvas dos Gráficos*/
         var resetarCanvas = function(contratos, tipo) {
