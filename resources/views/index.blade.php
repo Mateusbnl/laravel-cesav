@@ -152,6 +152,12 @@
                 success: function(response) {
 
                     ctr = response;
+
+                    //formata para nosso padrão de data e moeda
+                    ctr = formataData(ctr);
+
+
+
                     //verifica se a opção todos está marcado, pois caso esteja, ira informar sobre a primeira unidade/produto e o usuário poderá ir selecionando as informações que deseja
                     if (co_unidade == "todas_unidades" && nu_produto == "todos_produtos") {
                         primeiraUnidade = ctr.filter(function(el) {
@@ -321,7 +327,10 @@
             return Array.from(map.values());
         };
 
-        function getRandomColor(qtdProdutos) { //generates random colours and puts them in string
+        //gera cores para os elementos dos graficos
+        var colors = [];
+
+        function getRandomColor(qtdProdutos) {
             var colors = [];
             for (var i = 0; i <= qtdProdutos; i++) {
                 var letters = '0123456789ABCDEF'.split('');
@@ -336,12 +345,21 @@
 
         /**Reinicia o Canvas dos Gráficos*/
         var resetarCanvas = function(contratos, tipo) {
-            $('#myChart').remove(); // this is my <canvas> element
+            $('#myChart').remove();
             $('#corpo-canvas').append('<canvas id="myChart"><canvas>');
-            $('#myPieChartProdutos').remove(); // this is my <canvas> element
+            $('#myPieChartProdutos').remove();
             $('#corpo-pie').append('<canvas id="myPieChartProdutos"><canvas>');
             geraGrafico(contratos, tipo);
         };
+
+        /*função para formatar datas pt-br*/
+        function formataData(contratos) {
+            contratos.forEach(ctr => {
+                let data = new Date(ctr.data_arquivo);
+                ctr.data_arquivo = data.toLocaleDateString("pt-BR");
+            });
+            return contratos;
+        }
     });
 </script>
 
