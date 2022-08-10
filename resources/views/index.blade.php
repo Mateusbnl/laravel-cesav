@@ -355,7 +355,10 @@
         /*função para formatar datas pt-br*/
         function formataData(contratos) {
             contratos.forEach(ctr => {
+                /** Gambiarra para correção em futura iteração */
                 let data = new Date(ctr.data_arquivo);
+                data.setDate(data.getDate() + 1);
+                /** final da Gambiara - ao transformar a data para formatação estava indo com um dia a menos, solucionei provisoriamente adicionando um dia depois de transformado - */
                 ctr.data_arquivo = data.toLocaleDateString("pt-BR");
             });
             return contratos;
